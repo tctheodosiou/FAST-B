@@ -345,3 +345,29 @@ class Rational(Copyable):
         >>> integral, error = r.integral(0, 1)  # ∫₀¹ 1/(x+1) dx = ln(2)
         """
         return quadrature(lambda x: self(x), x1, x2, *args, **kwargs)
+
+    def simplify(self):
+        """
+        Simplify the rational function by removing common factors.
+
+        Currently removes trailing zeros from both numerator and denominator
+        polynomials and normalizes by the leading coefficient of the denominator.
+
+        Returns
+        -------
+        Rational
+            Simplified rational function (modified in-place).
+
+        Notes
+        -----
+        - This is a basic simplification that removes common factors of x
+        - More sophisticated polynomial GCD simplification could be added
+        - Normalization ensures denominator leading coefficient is 1
+        """
+        if self.numerator.coeffs[-1] == 0. and self.denominator.coeffs[-1] == 0.:
+            self.numerator = Polynomial(self.numerator.coeffs[0:-1])
+            self.denominator = Polynomial(self.denominator.coeffs[0:-1])
+
+        self.numerator /= self.denominator[0]
+        self.denominator /= self.denominator[0]
+        return self

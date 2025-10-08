@@ -564,3 +564,18 @@ class Function(Copyable):
         if name is not None:
             mycopy.name = name
         return mycopy
+
+    def simplify(self):
+        """
+        Simplify all branches of the function.
+
+        Applies simplification to each branch's rational function.
+
+        Returns
+        -------
+        Function
+            Self with simplified branches (modified in-place).
+        """
+        for b in self.branches:
+            b.simplify()
+        return self
