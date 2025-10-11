@@ -579,3 +579,27 @@ class Function(Copyable):
         for b in self.branches:
             b.simplify()
         return self
+
+    def to_latex(self, variable='x'):
+        """
+        Convert a Function object to LaTeX representation.
+
+        Parameters
+        ----------
+        variable : str, optional
+            Variable name (default: 'x')
+
+        Returns
+        -------
+        str
+            LaTeX representation of the function
+        """
+        # Process the piecewise function
+        latex_pieces = []
+        for branch in self.branches:
+            branch_latex = branch.to_latex(variable)
+            latex_pieces.append(branch_latex)
+
+        # latex_str = "\\begin{cases}\n" + " \\\\\n".join(latex_pieces) + "\n\\end{cases}"
+        latex_str = "\\left\\{\\begin{array}{ll}\n" + " \\\\\n".join(latex_pieces) + "\n\\end{array}\\right."
+        return latex_str

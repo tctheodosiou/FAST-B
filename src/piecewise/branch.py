@@ -477,3 +477,30 @@ class Branch(Rational):
             if positive_extreme > np.abs(negative_extreme) \
             else negative_extreme
         return y0
+
+    def to_latex(self, variable='x', precision=1e-12):
+        """
+        Convert rational function to LaTeX with domain information.
+
+        Parameters
+        ----------
+        variable : str, optional
+            Variable name (default: 'x')
+        precision : float, optional
+            Required precision for roundign coefficients (default: 1e-12)
+
+        Returns
+        -------
+        str
+            LaTeX representation with domain
+        """
+        support = self.support
+        rational_latex = super().to_latex(variable, precision)
+
+        if support is not None:
+            left_bracket = '[' if self.includes_left_boundary else '('
+            right_bracket = ']' if self.includes_right_boundary else ')'
+            domain_str = f"{left_bracket}{support[0]}, {support[1]}{right_bracket}"
+            return f"{rational_latex} \\quad \\text{{for }} {variable} \\in {domain_str}"
+        else:
+            return rational_latex

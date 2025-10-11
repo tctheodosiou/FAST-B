@@ -307,3 +307,81 @@ class Polynomial(np.poly1d, Copyable):
         if name is not None:
             mycopy.name = name
         return mycopy
+
+    def to_latex(self, variable='x', precision=1e-12):
+        """
+        Convert polynomial to LaTeX representation.
+
+        Parameters
+        ----------
+        variable : str, optional
+            Variable name (default: 'x')
+        precision : float, optional
+            Required precision for roundign coefficients (default: 1e-12)
+
+        Returns
+        -------
+        str
+            LaTeX representation of the polynomial
+
+        Examples
+        --------
+        >>> p = Polynomial([1, -2, 3])
+        >>> p.to_latex()
+        'x^{2} - 2x + 3'
+        >>> p.to_latex('t')
+        't^{2} - 2t + 3'
+        """
+        coeffs = self.coeffs
+        terms = []
+
+        # Handle zero polynomial
+        if np.allclose(coeffs, 0):
+            return "0"
+
+        for i, coeff in enumerate(coeffs):
+            power = len(coeffs) - i - 1
+
+            # Skip zero coefficients (except for constant term if it's the only term)
+            if abs(coeff) < precision and not (power == 0 and len(terms) == 0):
+                continue
+
+            # Format coefficient
+            if power == 0:
+                # Constant term
+                term = f"{coeff:.6g}"
+            elif power == 1:
+                # Linear term
+                if abs(coeff) == 1:
+                    term = f"{variable}"
+                elif abs(coeff) == -1:
+                    term = f"-{variable}"
+                else:
+                    term = f"{coeff:.6g}{variable}"
+            else:
+                # Higher order terms
+                if abs(coeff) == 1:
+                    term = f"{variable}^{{{power}}}"
+                elif abs(coeff) == -1:
+                    term = f"-{variable}^{{{power}}}"
+                else:
+                    term = f"{coeff:.6g}{variable}^{{{power}}}"
+
+            # Handle signs for non-first terms
+            if terms:
+                if coeff >= 0:
+                    term = "+ " + term
+                else:
+                    # Remove the negative sign and add minus
+                    term = "- " + term[1:] if term.startswith('-') else term
+            else:
+                # First term - if negative, keep the minus sign
+                if coeff < 0 and not term.startswith('-'):
+                    term = "-" + term
+
+            terms.append(term)
+
+        if not terms:  # Should not happen due to zero check, but just in case
+            return "0"
+
+        return " ".join(terms)
