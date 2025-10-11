@@ -371,3 +371,120 @@ class Rational(Copyable):
         self.numerator /= self.denominator[0]
         self.denominator /= self.denominator[0]
         return self
+
+    def to_latex(self, variable='x', precision=1e-12):
+        """
+        Convert rational function to LaTeX representation.
+
+        Parameters
+        ----------
+        variable : str, optional
+            Variable name (default: 'x')
+        precision : float, optional
+            Required precision for roundign coefficients (default: 1e-12)
+
+        Returns
+        -------
+        str
+            LaTeX representation of the rational function
+
+        Examples
+        --------
+        >>> r = Rational(Polynomial([1, 0]), Polynomial([1, 1]))
+        >>> r.to_latex()
+        '\\\\frac{x}{x + 1}'
+        >>> r.to_latex('t')
+        '\\\\frac{t}{t + 1}'
+        """
+
+        # Get LaTeX for numerator and denominator
+        num_latex = self.numerator.to_latex(variable)
+        den_latex = self.denominator.to_latex(variable)
+
+        # Handle special cases for cleaner output
+        if den_latex == "1":
+            # Constant denominator 1 - just return numerator
+            return num_latex
+        elif num_latex == "0":
+            # Zero numerator
+            return "0"
+        elif self.denominator.order == 0 and self.denominator.coeffs[0] == 1:
+            # Denominator is exactly 1
+            return num_latex
+        else:
+            # Full rational function
+            # Check if denominator needs parentheses
+            if self._needs_parentheses(self.denominator, precision):
+                den_latex = f"({den_latex})"
+
+            # Check if numerator needs parentheses (for negative or complex expressions)
+            if self._needs_parentheses_numerator(self.numerator, precision):
+                num_latex = f"({num_latex})"
+
+            return f"\\frac{{{num_latex}}}{{{den_latex}}}"
+
+    def _needs_parentheses(self, poly, precision):
+        """
+        Check if polynomial needs parentheses in denominator.
+
+        Parameters
+        ----------
+        poly : Polynomial
+            Polynomial to check
+        precision: float
+            Rounding error
+
+        Returns
+        -------
+        bool
+            True if parentheses are needed
+        """
+        # Polynomials of order > 1 need parentheses
+        if poly.order > 1:
+            return True
+
+        # Polynomials with negative leading coefficient need parentheses
+        if poly.order >= 0 and poly.coeffs[0] < 0:
+            return True
+
+        # Polynomials with multiple terms need parentheses
+        if poly.order >= 1 and len([c for c in poly.coeffs if abs(c) > 0]) > precision:
+            return True
+
+        return False
+
+    def _needs_parentheses_numerator(self, poly, precision):
+        """
+        Check if polynomial needs parentheses in numerator.
+
+        Parameters
+        ----------
+        poly : Polynomial
+            Polynomial to check
+        precision: float
+            Rounding error
+
+        Returns
+        -------
+        bool
+            True if parentheses are needed
+        """
+        # Only need parentheses for negative or complex expressions
+        if poly.order > 1:
+            return True
+
+        # Negative leading coefficient
+        if poly.order >= 0 and poly.coeffs[0] < 0:
+            return True
+
+        # Multiple terms with mixed signs
+        if poly.order >= 1:
+            non_zero_coeffs = [c for c in poly.coeffs if abs(c) > precision]
+            if len(non_zero_coeffs) > 1:
+                # Check if there are both positive and negative coefficients
+                has_positive = any(c > 0 for c in non_zero_coeffs)
+                has_negative = any(c < 0 for c in non_zero_coeffs)
+                if has_positive and has_negative:
+                    return True
+
+        return False
