@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build PDF
-        uses: openjournals/openjournals/openjournals-draft-action@master
+        uses: openjournals/openjournals-draft-action@master
         with:
           journal: joss
           path: paper.md
