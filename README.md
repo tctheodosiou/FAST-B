@@ -23,9 +23,10 @@ performance through intelligent caching and efficient numerical computation.
 
 ```bash
 git clone https://github.com/tctheodosiou/FAST-B.git
-cd fast-b
-pip install -e .
+cd FAST-B
+pip install -r requirements.txt .
 ```
+or simply use the modules in the ```src``` directory for your project. 
 
 ## Quick start
 ```python
