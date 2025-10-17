@@ -2,30 +2,25 @@ name: Generate JOSS PDF
 
 on:
   push:
-    branches: [ main, master ]
-    paths: [ 'paper.md', 'paper.bib' ]
-  pull_request:
-    branches: [ main, master ]
-    paths: [ 'paper/paper.md', 'paper/paper.bib' ]
-  workflow_dispatch:  # Manual trigger
+    branches: [ main ]
+    paths: [ 'paper.md' ]
+  workflow_dispatch:
 
 jobs:
-  paper:
+  generate-pdf:
     runs-on: ubuntu-latest
-    name: PDF Generator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build PDF
+      - name: Generate PDF
         uses: openjournals/openjournals-draft-action@master
         with:
           journal: joss
-          path: paper.md
+          paper-path: paper.md  # Αλλαγή από 'path' σε 'paper-path'
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: paper-pdf
           path: paper.pdf
-          retention-days: 30
