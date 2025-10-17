@@ -18,6 +18,7 @@ bibliography: paper.bib
 
 ## Summary
 
+
 FAST-B is a Python package that generates pseudo-analytic expressions for 
 B-spline basis functions using NumPy instead of traditional symbolic computation
 libraries like SymPy. The library provides computationally efficient generation
