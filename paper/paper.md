@@ -1,3 +1,19 @@
+---
+title: 'FAST-B: Fast Analytic B-spline Toolkit'
+tags:
+  - Python
+  - analytic toolkit
+  - B-Splines
+authors:
+  - name: Theodosios C. Theodosiou
+    orcid: 0000-0001-6938-1399
+    affiliation: 1
+affiliations:
+ - name: Dept. Energy Systems, University of Thessaly, Larissa, Greece.
+   index: 1
+date: 17 October 2025
+bibliography: paper.bib
+---
 # FAST-B: Fast Analytic B-spline Toolkit
 
 ## Summary
@@ -161,3 +177,10 @@ N = NonUniformBSpline(t, 3, 1)  # degree=2, index=1
 - **Code Repository:** https://github.com/tctheodosiou/FAST-B
 - **Documentation:** Comprehensive examples and API documentation 
 - **Support:** Issue tracking and community support via GitHub
+
+# Acknowledgements
+The authors acknowledge the use of DeepSeek for proofreading docstrings and  
+performance benchmarks. All core algorithmic implementations and mathematical 
+formulations are human-authored.
+
+# References
