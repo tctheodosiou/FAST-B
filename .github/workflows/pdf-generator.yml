@@ -6,7 +6,7 @@ on:
     paths: [ 'paper.md', 'paper.bib' ]
   pull_request:
     branches: [ main, master ]
-    paths: [ 'paper.md', 'paper.bib' ]
+    paths: [ 'paper/paper.md', 'paper/paper.bib' ]
   workflow_dispatch:  # Manual trigger
 
 jobs:
