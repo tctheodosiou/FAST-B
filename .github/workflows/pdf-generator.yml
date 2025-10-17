@@ -3,7 +3,7 @@ name: Generate JOSS PDF
 on:
   push:
     branches: [ main ]
-    paths: [ 'paper.md' ]
+    paths: [ 'paper/paper.md' ]
   workflow_dispatch:
 
 jobs:
@@ -13,13 +13,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug - List files before
+        run: |
+          echo "=== Files before ==="
+          find . -name "*.md" -o -name "*.pdf" | head -20
+
       - name: Generate PDF
         uses: openjournals/openjournals-draft-action@master
         with:
           journal: joss
-          paper-path: paper/paper.md  # Αλλαγή από 'path' σε 'paper-path'
+          paper-path: paper/paper.md
 
-      - name: Upload PDF
+      - name: Debug - List files after
+        run: |
+          echo "=== Files after ==="
+          find . -name "*.pdf" | head -20
+          ls -la *.pdf 2>/dev/null || echo "No PDF files found"
+
+      - name: Upload PDF (if exists)
         uses: actions/upload-artifact@v4
         with:
           name: paper-pdf
