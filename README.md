@@ -22,7 +22,7 @@ performance through intelligent caching and efficient numerical computation.
 ## Installation
 
 ```bash
-git clone https://github.com/tctheodsiou/fast-b.git
+git clone https://github.com/tctheodosiou/FAST-B.git
 cd fast-b
 pip install -e .
 ```
