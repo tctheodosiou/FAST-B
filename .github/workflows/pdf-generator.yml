@@ -3,45 +3,29 @@ name: Generate JOSS PDF
 on:
   push:
     branches: [ main, master ]
-    paths: [ 'paper.md', 'paper.bib' ]  # Trigger only when paper.{md.bib} changes.
+    paths: [ 'paper.md', 'paper.bib' ]
   pull_request:
     branches: [ main, master ]
     paths: [ 'paper.md', 'paper.bib' ]
-  release:
-    types: [ published ]
-  workflow_dispatch:  # πιτρέπει manual trigger
+  workflow_dispatch:  # Manual trigger
 
 jobs:
   paper:
     runs-on: ubuntu-latest
     name: PDF Generator
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate PDF
-        uses: openjournals/open-journals-pdf-generator@main
+      - name: Build PDF
+        uses: openjournals/pandoc-action@main
         with:
           journal: joss
-          paper_path: paper.md
-          
-          output_path: paper.pdf
-          keep_temp_files: false
+          path: paper.md
 
-      - name: Upload PDF artifact
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: paper-pdf
           path: paper.pdf
           retention-days: 30
-
-      - name: Upload PDF to release (on publish)
-        if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./paper.pdf
-          asset_name: paper.pdf
-          asset_content_type: application/pdf
